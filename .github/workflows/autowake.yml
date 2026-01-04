@@ -21,7 +21,7 @@ jobs:
           
       - name: Send success notification
         run: |
-          curl -H "Title: ✅ SearXNG Auto-Wake Success" \
+          curl -u :finnmcd -H "Title: ✅ SearXNG Auto-Wake Success" \
             -H "Tags: white_check_mark" \
             -d "Droplet ${{ secrets.DROPLET_ID }} has been powered on and is booting up. SearXNG should be accessible at https://triadsearch.duckdns.org in ~1 minute." \
             ntfy.sh/triadtechntfy
