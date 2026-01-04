@@ -1,0 +1,27 @@
+name: Auto-Wake SearXNG Droplet
+
+on:
+  repository_dispatch:
+    types: [wake]
+
+jobs:
+  wake-droplet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Power on droplet
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.DO_API_TOKEN }}" \
+            "https://api.digitalocean.com/v2/droplets/${{ secrets.DROPLET_ID }}/actions" \
+            -d '{"type":"power_on"}'
+          
+      - name: Wait for boot
+        run: sleep 60
+          
+      - name: Send success notification
+        run: |
+          curl -H "Title: ✅ SearXNG Auto-Wake Success" \
+            -H "Tags: white_check_mark" \
+            -d "Droplet ${{ secrets.DROPLET_ID }} has been powered on and is booting up. SearXNG should be accessible at https://triadsearch.duckdns.org in ~1 minute." \
+            ntfy.sh/triadtechntfy
